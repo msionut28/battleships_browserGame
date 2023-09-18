@@ -71,8 +71,6 @@
     function handleDragStart(e) {
         draggedShipElData = this;
         this.style.opacity = '0.5'
-        e.dataTransfer.effectAllowed= 'move'
-        e.dataTransfer.setData('text/html', '')
     }
 
     function handleDragOver(e) {
@@ -92,11 +90,7 @@
     function handleDrop(e) {
         e.preventDefault()
         this.classList.add('over')
-        if(draggedShipElData !== null) {
-            this.innerHTML = e.dataTransfer.getData('text/html', )
-            draggedShipElData.innerHTML = '';
-            draggedShipElData = null
-        }
+        draggedShipElData.innerHTML = '';
     }
     }
 
