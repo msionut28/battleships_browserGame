@@ -1,0 +1,63 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  body{
+    height: 100vh;
+    margin: 0;
+  }
+  
+  /* BOARD SETUP */
+
+  .grid-wrapper {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+  }
+  
+  .player-grid, .ai-grid {
+    align-items: center;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-wrap: wrap;
+    height: 100%;
+    justify-content: center;
+    height: 450px;
+    width: 450px;
+  }
+  
+  .player-grid > div, .ai-grid > div {
+    border: 1px solid lightgrey;
+    flex-grow: 1;
+    height: 2.8rem;
+    width: 2.8rem;
+  }
+  
+  /* SHIP SETUP */
+.battleships {
+    position: absolute;
+    padding: 10px;
+}
+
+.carrier, .battleship, .cruiser, .submarine, .destroyer {
+    display: flex;
+    flex-direction: row;
+}
+.carrier > div, .battleship > div, .cruiser > div, .submarine > div, .destroyer > div {
+    height: 1.4rem;
+    width: 1.4rem;
+    border: 1px solid lightgray;
+}
+.carrier > div:hover, .battleship > div:hover, .cruiser > div:hover, .submarine > div:hover, .destroyer > div:hover {
+    height:2.8rem;
+    width: 2.8rem;
+    border: 1px solid lightgray;
+    background-color: orange;
+}
+
+.cell.over {
+    border: 1px dotted #666;
+    background: orange;
+}

@@ -1,11 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Battleships</title>
-</head>
-<body>
-    
-</body>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>BATTLESHIPS!</title>
+    <link rel="stylesheet" href="./css/styles.css">
+    <script src="./js/app.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <main class="grid-wrapper">
+        <div class="player-container">
+            <section class="player-grid"></section>
+            <section class="battleships">
+                <div class="carrier ship" >
+                    <div draggable="true">1</div>
+                    <div draggable="true">2</div>
+                    <div draggable="true">3</div>
+                    <div draggable="true">4</div>
+                    <div draggable="true">5</div>
+                </div>
+                <div class="battleship ship" draggable="true">
+                    <div draggable="true">1</div>
+                    <div draggable="true">2</div>
+                    <div draggable="true">3</div>
+                    <div draggable="true">4</div>
+                </div>
+                <div class="cruiser ship">
+                    <div draggable="true">1</div>
+                    <div draggable="true">2</div>
+                    <div draggable="true">3</div>
+                </div>
+                <div class="submarine ship">
+                    <div draggable="true">1</div>
+                    <div draggable="true">2</div>
+                    <div draggable="true">3</div>
+                </div>
+                <div class="destroyer ship" id="draggable" draggable="true">
+                    <div draggable="true">1</div>
+                    <div draggable="true">2</div>
+                </div>
+            </div>
+        </div>
+            <section class="ai-grid"></section>
+    </main>
+  </body>
 </html>
