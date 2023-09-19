@@ -3,9 +3,6 @@
   }
   
   body {
-    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-    background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
     height: 100vh;
     margin: 0;
 }
@@ -58,23 +55,36 @@
     padding: 10px;
 }
 
-.carrier, .battleship, .cruiser, .submarine, .destroyer {
+.ship {
     display: flex;
     flex-direction: row;
 }
-.carrier > div, .battleship > div, .cruiser > div, .submarine > div, .destroyer > div {
+.ship > div {
     height: 1.4rem;
     width: 1.4rem;
     border: 1px solid lightgray;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
 }
-.carrier > div:hover, .battleship > div:hover, .cruiser > div:hover, .submarine > div:hover, .destroyer > div:hover {
+.ship > div:hover {
     height:2.8rem;
     width: 2.8rem;
     border: 1px solid lightgray;
-    background-color: orange;
+
 }
 
-.cell.over {
-    border: 1px dotted #666;
-    background: orange;
+.over {
+    /* border: 1px dotted #666; */
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+    border: none;
+}
+
+[id-hover='over'] {
+  border: 1px dotted #666;
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
 }

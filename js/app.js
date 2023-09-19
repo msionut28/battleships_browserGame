@@ -9,8 +9,8 @@
     const width = 10
     const height = 10
     const cellCount = width * height
-    const columnIndex = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
-    const rowIndex = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+    const columnIndex = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
+    const rowIndex = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
 
         //*PLAYER'S BOARD
     boardGenerator(playerBoard)
@@ -18,6 +18,10 @@
         //*AI'S BOARD
     boardGenerator(aiBoard)
     idSetter('.ai-grid')
+
+        //*DATA MANAGEMENT
+    const playerBoardCoordinates = getIndexOfDivs(playerBoard)
+    console.log(playerBoardCoordinates);
 
 
     //!FUNCTIONS 
@@ -70,7 +74,7 @@
         //* AND DROPPING
     function handleDragStart(e) {
         draggedShipElData = this;
-        this.style.opacity = '0.5'
+        shipSize = parseInt(this.getAttribute('ship-size'))
     }
 
     function handleDragOver(e) {
@@ -79,19 +83,53 @@
 
     function handleDragEnter(e) {
         e.preventDefault()
-        this.classList.add('over')
+        this.setAttribute('id-hover', 'over')
     }
 
     function handleDragLeave(e) {
         e.preventDefault()
-        this.classList.remove('over')
+        this.removeAttribute('id-hover', 'over')
     }
 
     function handleDrop(e) {
         e.preventDefault()
-        this.classList.add('over')
-        draggedShipElData.innerHTML = '';
-    }
+        if (this.parentElement.classList.contains('ai-grid')){
+            this.removeAttribute('id-hover', 'over')
+            draggedShipElData.style.opacity = 1;
+            return;
+        }
+        this.removeAttribute('id-hover', 'over')
+        this.removeAttribute('class', 'cell')
+
+        // * BY THE AID OF THIS FOR LOOP, ALL OF THE DIVS CONTAINED BY A SHIP WILL 
+        //* ACCORDINGLY UPDATE THE BOARD, INSTEAD OF JUST ONE DIV!
+        let currentCell = this
+        const shipName = draggedShipElData.className.split(' ')[0]
+
+        if (currentCell.classList.contains('cell')){}
+        for(let i = 0; i < shipSize; i++){
+            currentCell.classList.add('over', shipName)
+            currentCell = currentCell.nextElementSibling;
+        }
+        draggedShipElData.innerHTML = ''
     }
 
+    //* FUNCTIONS FOR DATA STORAGE AND MANAGEMENT
+
+function getIndexOfDivs(board){
+    const divs = board.querySelectorAll('div')
+    const divsCoordinates = {};
+    //LOOPING THROUGH ALL THE DIVS TO STORE THE INFO
+    divs.forEach(function (div, index) {
+        const id = div.getAttribute('id')
+        if (id !== null) {
+            divsCoordinates[id] = index
+        }
+    });
+    return divsCoordinates
+ }
+
+}
+
     window.addEventListener('DOMContentLoaded', init)
+console.log();
