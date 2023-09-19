@@ -5,12 +5,13 @@
     const playerBoard = document.querySelector('.player-grid')
     const aiBoard = document.querySelector('.ai-grid')
 
-        //*GRID CONFIG
+        //*GRID CONFIG & GENERAL DATA
     const width = 10
     const height = 10
     const cellCount = width * height
     const columnIndex = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
     const rowIndex = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+    const battleships = ['carrier', 'battleship', 'cruiser', 'submarine', 'destroyer']
 
         //*PLAYER'S BOARD
     boardGenerator(playerBoard)
@@ -21,7 +22,8 @@
 
         //*DATA MANAGEMENT
     const playerBoardCoordinates = getIndexOfDivs(playerBoard)
-    console.log(playerBoardCoordinates);
+    const placedShips = [];
+
 
 
     //!FUNCTIONS 
@@ -98,20 +100,50 @@
             draggedShipElData.style.opacity = 1;
             return;
         }
-        this.removeAttribute('id-hover', 'over')
-        this.removeAttribute('class', 'cell')
-
+        
         // * BY THE AID OF THIS FOR LOOP, ALL OF THE DIVS CONTAINED BY A SHIP WILL 
         //* ACCORDINGLY UPDATE THE BOARD, INSTEAD OF JUST ONE DIV!
-        let currentCell = this
         const shipName = draggedShipElData.className.split(' ')[0]
 
-        if (currentCell.classList.contains('cell')){}
-        for(let i = 0; i < shipSize; i++){
-            currentCell.classList.add('over', shipName)
-            currentCell = currentCell.nextElementSibling;
+        if (isShipPlacementValid(shipSize, this)) {
+            let currentCell = this
+            const cellsToCheck = [] //*USED FOR CHECKING IF SHIP CAN BE PLACED
+            const shipCells = [] //*USED FOR STORING INFORMATION REGARDING SHIP COORDINATES
+    
+            if (currentCell.classList.contains('cell')){
+                for(let i = 0; i < shipSize; i++){
+                    currentCell.classList.remove('cell')
+                    currentCell.classList.add('over', shipName)
+                    shipCells.push(currentCell.getAttribute('id'))
+                    currentCell = currentCell.nextElementSibling;
+                }
+                draggedShipElData.innerHTML = ''
+            }
+            this.classList.remove('cell')
+            this.removeAttribute('id-hover', 'over')
+            placedShips.push({id: shipName, cells: shipCells})
+        } else {
+            this.removeAttribute('id-hover', 'over')
         }
-        draggedShipElData.innerHTML = ''
+        }
+
+    function isShipPlacementValid(shipSize, currentCell) {
+        const cellsToCheck = [];
+      
+        for (let i = 0; i < shipSize; i++) {
+          if (!currentCell.classList.contains('cell') || currentCell.classList.contains('over')) {
+            return false;
+          }
+          cellsToCheck.push(currentCell);
+          currentCell = currentCell.nextElementSibling;
+        }
+      
+        if (cellsToCheck.some(cell => cell.classList.contains('over'))) {
+
+          return false;
+        }
+        return true
+        
     }
 
     //* FUNCTIONS FOR DATA STORAGE AND MANAGEMENT
@@ -125,11 +157,23 @@ function getIndexOfDivs(board){
         if (id !== null) {
             divsCoordinates[id] = index
         }
-    });
+    })
     return divsCoordinates
  }
 
+//  function getCoordinatesOfShips(board){
+//     const divs = board.querySelectorAll('div')
+//     const shipCoordinates = {};
+//     divs.forEach(function (div, index) {
+//         const id = div.getAttribute('id')
+//         for (let i = 0; i < battleships.length; i++){
+//             if (id === battleships[i]){
+//                 shipCoordinates[index] = id
+//             }
+//         }
+//     })
+//     return shipCoordinates
+//  }
+ console.log(playerBoardCoordinates, placedShips);
 }
-
     window.addEventListener('DOMContentLoaded', init)
-console.log();
