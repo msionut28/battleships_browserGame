@@ -6,21 +6,28 @@ const playerBoard = document.querySelector('.player-grid')
 const aiBoard = document.querySelector('.ai-grid')
 
     //*GRID CONFIG & GENERAL DATA
-const width = 10
-const height = 10
-const cellCount = width * height
-const columnIndex = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
-const rowIndex = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
-const battleships = ['carrier', 'battleship', 'cruiser', 'submarine', 'destroyer']
-const battleshipsLengths = [5, 4, 3, 3, 2]
+
+    const aiColumns = document.querySelector('.ai-columns')
+    const aiRows = document.querySelector('.ai-rows')
+    const battleships = ['carrier', 'battleship', 'cruiser', 'submarine', 'destroyer']
+    const battleshipsLengths = [5, 4, 3, 3, 2]
+    const columnIndex = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
+    const height = 10
+    const playerColumns = document.querySelector('.player-columns')
+    const playerRows = document.querySelector('.player-rows')
+    const rowIndex = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+    const width = 10
+    const cellCount = width * height
 
     //*PLAYER'S BOARD
-boardGenerator(playerBoard)
-idSetter('.player-grid')
+    boardGenerator(playerBoard)
+    idSetter('.player-grid')
+    columnAndRowGenerator(playerRows, playerColumns)
 
     //*AI'S BOARD
 boardGenerator(aiBoard)
 idSetter('.ai-grid')
+columnAndRowGenerator(aiRows, aiColumns)
 const aiShips = randomShipGenerator(aiBoard)
 const markedDivs = updateAIShipCellsOnBoard(aiShips, aiBoard)
 
@@ -39,6 +46,19 @@ function boardGenerator(board) {
         // cell.innerHTML = i
         //ADDING CELLS TO BOARD
         board.appendChild(cell)
+    }
+}
+
+function columnAndRowGenerator(container, row){
+    for (let i = 0; i < columnIndex.length; i++){
+        const colGenerator = document.createElement('div')
+        colGenerator.innerText = columnIndex[i]
+        container.appendChild(colGenerator)
+    }
+    for (let i = 0; i < rowIndex.length; i++){
+        const rowGenerator = document.createElement('div')
+        rowGenerator.innerText = rowIndex[i]
+        row.appendChild(rowGenerator)
     }
 }
     //*ID SETTING FUNCTION FOR COORDINATES
@@ -60,21 +80,23 @@ function idSetter(boardSelector) {
 }
 
 function handleCellClick(e) {
-    e.preventDefault(); // Invoke e.preventDefault()
+    e.preventDefault(); 
 
     const cell = this
     const currClass = cell.getAttribute('class')
+    const divsInCell = cell.querySelectorAll('div').length
+    const playerBoard = cell.parentElement.classList.contains('player-grid')
 
     const newDiv = document.createElement('div')
     newDiv.innerText = '.'
-    if (currClass === 'cell') {
+    if (playerBoard || divsInCell > 0){
+        return false
+    } else if (currClass === 'cell') {
         newDiv.setAttribute('id', 'red')
     } else if (currClass === 'aiship'){
         newDiv.setAttribute('id', 'green')
     }
     cell.appendChild(newDiv)
-
-    // Append the new div to the clicked cell
 
 }
 //? HANDLING DRAG&DROP OF SHIPS
@@ -166,6 +188,9 @@ function isShipPlacementValid(shipSize, currentCell) {
         return false;
       }
       cellsToCheck.push(currentCell);
+    //   if (cellsToCheck.length < shipSize){
+    //     return false;
+    //   }
       currentCell = currentCell.nextElementSibling;
     }
   //IF STATEMENT TO THECK IF ANY OF THE CELLS CONTAINS THE CLASS "OVER" THAT REPRESENTS

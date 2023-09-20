@@ -40,6 +40,7 @@
     justify-content: center;
     height: 450px;
     width: 450px;
+    margin-left: 28px;
   }
   
   .player-grid > div, .ai-grid > div {
@@ -47,6 +48,24 @@
     flex-grow: 1;
     height: 2.8rem;
     width: 2.8rem;
+  }
+
+  .player-rows, .ai-rows {
+    font-size: 25px;
+    margin-left: 2.55rem;
+    gap: 1.82rem;
+    display: flex;
+  }
+
+  .player-columns, .ai-columns {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: absolute;
+    font-size: 25px;
+    margin-top: 0.5rem;
+    gap: 1rem;
+    align-items: center;
   }
   
   /* SHIP SETUP */
