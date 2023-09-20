@@ -82,6 +82,31 @@
     border: none;
 }
 
+#red {
+  border-radius: 50%;
+  background: red;
+  color: red;
+  text-align: justify;
+  max-width: 50%;
+  min-height: 50%;
+  flex-grow: 1;
+  align-items: center;
+  margin-top: 25%;
+  margin-left: 25%;
+}
+#green {
+  border-radius: 50%;
+  background: green;
+  color: green;
+  text-align: justify;
+  max-width: 50%;
+  min-height: 50%;
+  flex-grow: 1;
+  align-items: center;
+  margin-top: 25%;
+  margin-left: 25%;
+}
+
 [id-hover='over'] {
   border: 1px dotted #666;
   background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);

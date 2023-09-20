@@ -1,33 +1,27 @@
-
-
 function init() {
-    //*GENERATING GRID
-const playerBoard = document.querySelector('.player-grid')
-const aiBoard = document.querySelector('.ai-grid')
 
     //*GRID CONFIG & GENERAL DATA
-const width = 10
-const height = 10
-const cellCount = width * height
-const columnIndex = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
-const rowIndex = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
-const battleships = ['carrier', 'battleship', 'cruiser', 'submarine', 'destroyer']
-const battleshipsLengths = [5, 4, 3, 3, 2]
+    const width = 10
+    const height = 10
+    const cellCount = width * height
+    const playerBoard = document.querySelector('.player-grid')
+    const aiBoard = document.querySelector('.ai-grid')
+    const columnIndex = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
+    const rowIndex = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+    const battleships = ['carrier', 'battleship', 'cruiser', 'submarine', 'destroyer']
+    const battleshipsLengths = [5, 4, 3, 3, 2]
 
     //*PLAYER'S BOARD
 boardGenerator(playerBoard)
 idSetter('.player-grid')
-
     //*AI'S BOARD
 boardGenerator(aiBoard)
 idSetter('.ai-grid')
-const aiShips = randomShipGenerator(aiBoard)
-const markedDivs = updateAIShipCellsOnBoard(aiShips, aiBoard)
+randomShipGenerator(aiBoard)
 
     //*DATA MANAGEMENT
 const playerBoardCoordinates = getIndexOfDivs(playerBoard)
 const placedShips = [];
-
 
 
 //!FUNCTIONS 
@@ -36,7 +30,7 @@ const placedShips = [];
 function boardGenerator(board) {
     for (let i = 0; i < cellCount; i++) {
         const cell = document.createElement('div')
-        // cell.innerHTML = i
+        cell.innerHTML = i
         //ADDING CELLS TO BOARD
         board.appendChild(cell)
     }
@@ -59,29 +53,10 @@ function idSetter(boardSelector) {
     }
 }
 
-function handleCellClick(e) {
-    e.preventDefault(); // Invoke e.preventDefault()
-
-    const cell = this
-    const currClass = cell.getAttribute('class')
-
-    const newDiv = document.createElement('div')
-    newDiv.innerText = '.'
-    if (currClass === 'cell') {
-        newDiv.setAttribute('id', 'red')
-    } else if (currClass === 'aiship'){
-        newDiv.setAttribute('id', 'green')
-    }
-    cell.appendChild(newDiv)
-
-    // Append the new div to the clicked cell
-
-}
 //? HANDLING DRAG&DROP OF SHIPS
 
 const gridCells = document.querySelectorAll('.cell')
 const ships = document.querySelectorAll('.ship')
-const aiShipDivs = document.querySelectorAll('.aiship')
 
     //* ADDING EVENTLISTENERS AND FUNCTIONS TO SHIPS AND CELLS
 ships.forEach(function (ship) {
@@ -93,12 +68,8 @@ gridCells.forEach(function (cell) {
     cell.addEventListener('dragenter', handleDragEnter)
     cell.addEventListener('dragleave', handleDragLeave)
     cell.addEventListener('drop', handleDrop)
-    cell.addEventListener('click', handleCellClick)
 })
 
-aiShipDivs.forEach(function (cell) {
-    cell.addEventListener('click', handleCellClick)
-})
     //* STYLING OUT THE FUNCTIONS AND THE EVENTS THAT SHOULD HAPPEN WHILE DRAGGING
     //* AND DROPPING
 function handleDragStart(e) {
@@ -127,7 +98,6 @@ function handleDrop(e) {
         draggedShipElData.style.opacity = 1;
         return;
     }
-
     
     // * BY THE AID OF THIS FOR LOOP, ALL OF THE DIVS CONTAINED BY A SHIP WILL 
     //* ACCORDINGLY UPDATE THE BOARD, INSTEAD OF JUST ONE DIV!
@@ -161,8 +131,10 @@ function isShipPlacementValid(shipSize, currentCell) {
     const cellsToCheck = [];
     const currId = currentCell.getAttribute('id')
     const currCol = currId.slice(0, 1)
+    let cell= currentCell;
     for (let i = 0; i < shipSize; i++) {
       if (!currentCell.classList.contains('cell') || currentCell.classList.contains('over') || currCol !== currentCell.getAttribute('id').slice(0, 1)) {
+        alert('You cannot place the ship here!')
         return false;
       }
       cellsToCheck.push(currentCell);
@@ -180,44 +152,32 @@ function isShipPlacementValid(shipSize, currentCell) {
 
 //*FUNCTIONS FOR AI BATTLESHIP PLACEMENT
 
-function randomShipGenerator(board) {
+function randomShipGenerator (board) {
     const randomPlacedShips = []
-
-    for (let i = 0; i < battleships.length; i++) {
+    let startingPoint = randomCellSelector(board)
+    
+    for (let i = 0; i < battleships.length; i++){
         const ship = battleships[i]
         const shipSize = battleshipsLengths[i]
         const shipCells = []
-
-        let startingPoint = randomCellSelector(board)
-
-        // Retry until a valid starting point is found
-        while (startingPoint && !isShipPlacementValid(shipSize, startingPoint, board)) {
-            startingPoint = randomCellSelector(board)
-        }
-
-        if (startingPoint) {
-            for (let j = 0; j < shipSize; j++) {
+        if (isShipPlacementValid(shipSize, startingPoint)){
+            for(let j = 0; j < shipSize; j++){
                 shipCells.push(startingPoint.getAttribute('id'))
                 startingPoint = startingPoint.nextElementSibling
             }
-            randomPlacedShips.push({ id: ship, cells: shipCells })
-        } else {
-            i--
         }
+        randomPlacedShips.push({id: ship, cells: shipCells})
     }
-
-    return randomPlacedShips;
+    return randomPlacedShips
 }
-
-
-
 function randomCellSelector(board) {
     const cells = board.querySelectorAll('div')
-    const randomIndex = Math.floor(Math.random() * cells.length)
-    const randomCell = cells[randomIndex]
-    return randomCell
+    const randomCell = cells[Math.floor(Math.random()* cells.length)]
+    const id = randomCell.getAttribute('id')
+    return id
 }
 
+console.log(randomCellSelector(aiBoard));
 
 //* FUNCTIONS FOR DATA STORAGE AND MANAGEMENT
 
@@ -234,21 +194,6 @@ divs.forEach(function (div, index) {
 return divsCoordinates
 }
 
-//* ONCE THE AI'S SHIPS HAVE BEEN GENERATED, WE'LL ASIGN A GREEN CLASS TO THEIR
-//* CORRESPONDING DIVS ON THE BOARD
-
-function updateAIShipCellsOnBoard(aiShips, board) {
-    aiShips.forEach(function (ship) {
-        ship.cells.forEach(function (cellId) {
-            const cell = board.querySelector(`#${cellId}`);
-            if (cell) {
-                cell.removeAttribute('class');
-                cell.setAttribute('class', 'aiship')
-            }
-        });
-    });
-}
-
 //  function getCoordinatesOfShips(board){
 //     const divs = board.querySelectorAll('div')
 //     const shipCoordinates = {};
@@ -262,6 +207,6 @@ function updateAIShipCellsOnBoard(aiShips, board) {
 //     })
 //     return shipCoordinates
 //  }
-console.log(playerBoardCoordinates, placedShips, aiShips);
+console.log(playerBoardCoordinates, placedShips);
 }
 window.addEventListener('DOMContentLoaded', init)
