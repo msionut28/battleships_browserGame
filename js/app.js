@@ -12,6 +12,7 @@
     const columnIndex = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
     const rowIndex = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
     const battleships = ['carrier', 'battleship', 'cruiser', 'submarine', 'destroyer']
+    const battleshipsLengths = [5, 4, 3, 3, 2]
 
         //*PLAYER'S BOARD
     boardGenerator(playerBoard)
@@ -127,23 +128,40 @@
         }
         }
 
+        //* THIS FUNCTION CHECKS WHETHER A SHIP CAN BE PLACED OR NOT BASED ON SEVERAL CONDITIONS
+        //* SUCH AS, THE SHIP MUST START AND END ON THE SAME ROW, THE SHIPS MUST NOT OVERLAP
     function isShipPlacementValid(shipSize, currentCell) {
         const cellsToCheck = [];
-      
+        const currId = currentCell.getAttribute('id')
+        const currCol = currId.slice(0, 1)
         for (let i = 0; i < shipSize; i++) {
-          if (!currentCell.classList.contains('cell') || currentCell.classList.contains('over')) {
+          if (!currentCell.classList.contains('cell') || currentCell.classList.contains('over') || currCol !== currentCell.getAttribute('id').slice(0, 1)) {
+            alert('You cannot place the ship here!')
             return false;
           }
           cellsToCheck.push(currentCell);
           currentCell = currentCell.nextElementSibling;
         }
-      
+      //IF STATEMENT TO THECK IF ANY OF THE CELLS CONTAINS THE CLASS "OVER" THAT REPRESENTS
+      //THE FACT THAT A SHIP HAS BEEN ALREADY PLACED THERE
         if (cellsToCheck.some(cell => cell.classList.contains('over'))) {
 
           return false;
         }
         return true
         
+    }
+
+    //*FUNCTIONS FOR AI BATTLESHIP PLACEMENT
+    
+    // function randomShipGenerator (board) {
+    //     for (shipName of battleships)
+    // }
+
+    function randomCellSelector() {
+        const randomCol = columnIndex[Math.floor(math.random()* columnIndex.length)]
+        const randomRow = rowIndex[math.floor(math.random() * rowIndex.length)]
+        return  randomCol+randomRow
     }
 
     //* FUNCTIONS FOR DATA STORAGE AND MANAGEMENT
