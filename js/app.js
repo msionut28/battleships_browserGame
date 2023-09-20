@@ -22,12 +22,12 @@ const aiBoard = document.querySelector('.ai-grid')
     //*PLAYER'S BOARD
     boardGenerator(playerBoard)
     idSetter('.player-grid')
-    columnAndRowGenerator(playerRows, playerColumns)
+    columnAndRowGenerator(playerColumns, playerRows)
 
     //*AI'S BOARD
 boardGenerator(aiBoard)
 idSetter('.ai-grid')
-columnAndRowGenerator(aiRows, aiColumns)
+columnAndRowGenerator(aiColumns, aiRows)
 const aiShips = randomShipGenerator(aiBoard)
 const markedDivs = updateAIShipCellsOnBoard(aiShips, aiBoard)
 
