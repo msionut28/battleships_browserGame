@@ -1,3 +1,4 @@
+let currentPlayer = 1
 
 
 function init() {
@@ -18,6 +19,8 @@ const aiBoard = document.querySelector('.ai-grid')
     const rowIndex = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
     const width = 10
     const cellCount = width * height
+    const hitShips = [];
+    const playersHitShips =[]
 
     //*PLAYER'S BOARD
     boardGenerator(playerBoard)
@@ -93,8 +96,16 @@ function handleCellClick(e) {
         return false
     } else if (currClass === 'cell') {
         newDiv.setAttribute('id', 'red')
+        currentPlayer *= -1
+        messageUpdater('TEST')
+        setTimeout(handleTurn(), 2000)
     } else if (currClass === 'aiship'){
         newDiv.setAttribute('id', 'green')
+        updateHitShips(this)
+        checkGameOver() //!COME BACK TO UNCOMMENT THIS
+        currentPlayer *= -1
+        messageUpdater('TEST')
+        setTimeout(handleTurn(), 2000)
     }
     cell.appendChild(newDiv)
 
@@ -162,7 +173,7 @@ function handleDrop(e) {
 
         if (currentCell.classList.contains('cell')){
             for(let i = 0; i < shipSize; i++){
-                currentCell.classList.remove('cell')
+                // currentCell.classList.remove('cell')
                 currentCell.classList.add('over', shipName)
                 shipCells.push(currentCell.getAttribute('id'))
                 currentCell = currentCell.nextElementSibling;
@@ -227,15 +238,14 @@ function randomShipGenerator(board) {
             }
             randomPlacedShips.push({ id: ship, cells: shipCells })
         } else {
-            i--
+            j--
         }
     }
 
     return randomPlacedShips;
 }
 
-
-
+//*RANDOM CELL SELECTOR THAT WILL BE USED FOR MULTIPLE OTHER FUNCTIONS
 function randomCellSelector(board) {
     const cells = board.querySelectorAll('div')
     const randomIndex = Math.floor(Math.random() * cells.length)
@@ -259,7 +269,7 @@ divs.forEach(function (div, index) {
 return divsCoordinates
 }
 
-//* ONCE THE AI'S SHIPS HAVE BEEN GENERATED, WE'LL ASIGN A GREEN CLASS TO THEIR
+//* ONCE THE AI'S SHIPS HAVE BEEN GENERATED, WE'LL ASIGN A AISHIP CLASS TO THEIR
 //* CORRESPONDING DIVS ON THE BOARD
 
 function updateAIShipCellsOnBoard(aiShips, board) {
@@ -274,6 +284,83 @@ function updateAIShipCellsOnBoard(aiShips, board) {
     });
 }
 
+function handleTurn () {
+    console.log('INSIDE HANDLETURN');
+    console.log('CURRENT PLAYER:', currentPlayer);
+    if (checkGameOver()) { 
+        console.log('game');
+        return; 
+    }
+    if (currentPlayer === -1){   //! -1 IS THE AI
+        console.log(`AI'S TURN`);
+        const cellsToTarget = aiCellTargeting();
+        console.log(`AI IS TARGETING CELLS: ${cellsToTarget}`);
+        const newDiv = document.createElement('div')
+        newDiv.innerText = '.'
+        if (cellsToTarget.classList.contains('over')){
+            newDiv.setAttribute('id', 'green')
+            updatePlayersHitShips(cellsToTarget)
+            checkGameOver() 
+        } else {
+            newDiv.setAttribute('id', 'red')
+        }
+        cellsToTarget.appendChild(newDiv)
+        currentPlayer *= -1 //!SWITCHING TURNS
+        messageUpdater(`${currentPlayer}'s Turn!`)
+    } else if (currentPlayer === 1){ //!1 IS THE PLAYER
+        console.log(`PLAYER'S TURN`);
+    }
+}                                       
+
+//*RANDOM PICKER FOR AI'S TURN
+function aiCellTargeting(){
+    const playerCells = playerBoard.querySelectorAll('.cell')
+    const cellsShouldTarget = Array.from(playerCells).filter(cell => cell.querySelectorAll('div').length === 0)
+    if (cellsShouldTarget.length === 0 ) {
+        return;
+    }
+    const randomPick = Math.floor(Math.random() * cellsShouldTarget.length)
+    console.log(cellsShouldTarget)
+    return cellsShouldTarget[randomPick]
+}
+
+//*FUNCTION TO DISPLAY WHO'S TURN IT IS
+function messageUpdater(message){
+    textToUpdate = document.getElementById('message')
+    if (currentPlayer === 1) {
+        return textToUpdate.innerText = `PLAYER'S TURN`
+    } else if (currentPlayer === -1) {
+        return textToUpdate.innerText = `AI'S TURN`
+    }
+    return textToUpdate.innerText = message
+}
+
+//*UPDATE HIT SHIPS BY THE PLAYER OR AI
+
+function updateHitShips(element){
+    id = element.getAttribute('id')
+    hitShips.push(id) 
+    }
+function updatePlayersHitShips(element){
+    id = element.getAttribute('id')
+    playersHitShips.push(id)
+}
+
+//*FUNCTION TO CHECK IF THE GAME IS OVER
+
+function checkGameOver(){
+    if (hitShips.length > 14){
+        currentPlayer = 0 
+        messageUpdater('PLAYER WINS!')
+    } else if (playersHitShips > 14) {
+        currentPlayer = 0
+        messageUpdater('AI WINS!')
+    }
+    return;
+}
+
+messageUpdater('HELLO')
+
 //  function getCoordinatesOfShips(board){
 //     const divs = board.querySelectorAll('div')
 //     const shipCoordinates = {};
@@ -287,6 +374,7 @@ function updateAIShipCellsOnBoard(aiShips, board) {
 //     })
 //     return shipCoordinates
 //  }
-console.log(playerBoardCoordinates, placedShips, aiShips);
+
+console.log(playerBoardCoordinates, placedShips, aiShips, hitShips, playersHitShips, aiCellTargeting());
 }
 window.addEventListener('DOMContentLoaded', init)

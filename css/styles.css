@@ -22,11 +22,16 @@
         background-position: 0% 50%;
     }
 }
-  
+  /* MAP, MESSAGE AND TITLE  */
+#message { 
+  margin-top: 3rem;
+  margin-left: 5rem;
+  }
+
   /* BOARD SETUP */
 
   .grid-wrapper {
-    height: 100vh;
+    height: 75vh;
     display: flex;
     justify-content: center;
     align-items: center;
