@@ -27,6 +27,27 @@
   margin-top: 3rem;
   margin-left: 5rem;
   }
+/* MODAL */
+.modal-content, .modal-header, .modal-footer {
+  text-align: center;
+  background-color: #d9ff0f;
+  border: none
+}
+  #coin-flip {
+    visibility: hidden;
+    font-family: press2p;
+    background-color: darkgray;
+    color: #fdffcd;
+    margin-left: 18rem;
+    border-style: none;
+  }
+  #heads, #tails {
+    color: #fdffcd
+  }
+
+  #heads {
+    margin-right: 15rem;
+  }
 
   /* BOARD SETUP */
 
@@ -75,7 +96,7 @@
     position: absolute;
     font-size: 18px;
     margin-top: 0.7rem;
-    gap: 1.7rem;
+    gap: 1.1rem;
     align-items: center;
   }
   
@@ -116,8 +137,8 @@
 #red {
   border: 1.3px dotted white;
   border-radius: 50%;
-  background: red;
-  color: red;
+  background: #fc3a52;
+  color: #fc3a52;
   text-align: justify;
   max-width: 50%;
   min-height: 50%;
@@ -129,8 +150,8 @@
 #green {
   border: 1.3px dotted white;
   border-radius: 50%;
-  background: green;
-  color: green;
+  background: #2eb872;
+  color: #2eb872;
   text-align: justify;
   max-width: 50%;
   min-height: 50%;
