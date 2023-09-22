@@ -587,7 +587,7 @@ function startGame(classOf) {
         }
     
         divToRemove.parentNode.removeChild(divToRemove)
-        document.body.style.overflow = 'show'
+        document.body.style.overflow = 'visible'
     }
 }
     
