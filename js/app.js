@@ -523,7 +523,7 @@ function checkGameOver(){
     } else if (playersHitShips.length > 16) { //*AI WIN SCENARIO
         messageUpdater('AI WINS!')
         title.innerText = 'AI WINS!'
-        message.innerText = `Well played! Unfortunately, you did not manage to stop the AI from conquering the world. 3 months have passed since you two fought and he has defeated every country on Earth. P.S. -Pss.. quick hint for you, since the AI really enjoyed the battle, it gave you the opportunity to fight him once again and summoned a button that acts as a a rewind wand.. Hit that button if you want to have another go!`
+        message.innerText = `Well played! Unfortunately, you did not manage to stop the AI from conquering the world.  3 months have passed since you two fought and he has defeated every country on Earth.     P.S. -Pss.. quick hint for you, since the AI really enjoyed the battle, it gave you the opportunity to fight him once again and summoned a button that acts as a a rewind wand.. Hit that button if you want to have another go and save the world!`
         const loser = new Audio()
         loser.autoplay = true
         loser.src = './assets/FX/fail.mp3'
