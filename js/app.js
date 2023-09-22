@@ -1,5 +1,3 @@
-
-
 function init() {
     //*GENERATING GRID
     const playerBoard = document.querySelector('.player-grid')
@@ -51,7 +49,7 @@ function init() {
 
 //!FUNCTIONS 
 
-    //*BOARD GENERATING FUNCTION
+//*BOARD GENERATING FUNCTION
 function boardGenerator(board) {
     for (let i = 0; i < cellCount; i++) {
         const cell = document.createElement('div')
@@ -73,7 +71,7 @@ function columnAndRowGenerator(container, row){
         row.appendChild(rowGenerator)
     }
 }
-    //*ID SETTING FUNCTION FOR COORDINATES
+//*ID SETTING FUNCTION FOR COORDINATES
 function idSetter(boardSelector) {
     const divs = document.querySelectorAll(`${boardSelector} div`)
 
@@ -91,6 +89,7 @@ function idSetter(boardSelector) {
     }
 }
 
+//* CLICK HANDLING EVENT SPECIFIC FOR AI BOARD
 function handleCellClick(e) {
     e.preventDefault()
 
@@ -129,9 +128,9 @@ function handleCellClick(e) {
 }
 //? HANDLING DRAG&DROP OF SHIPS
 
-const gridCells = document.querySelectorAll('.cell')
-const ships = document.querySelectorAll('.ship')
-const aiShipDivs = document.querySelectorAll('.aiship')
+    const gridCells = document.querySelectorAll('.cell')
+    const ships = document.querySelectorAll('.ship')
+    const aiShipDivs = document.querySelectorAll('.aiship')
 
     //* ADDING EVENTLISTENERS AND FUNCTIONS TO SHIPS AND CELLS
 ships.forEach(function (ship) {
@@ -149,8 +148,7 @@ gridCells.forEach(function (cell) {
 aiShipDivs.forEach(function (cell) {
     cell.addEventListener('click', handleCellClick)
 })
-    //* STYLING OUT THE FUNCTIONS AND THE EVENTS THAT SHOULD HAPPEN WHILE DRAGGING
-    //* AND DROPPING
+//* STYLING OUT THE FUNCTIONS AND THE EVENTS THAT SHOULD HAPPEN WHILE DRAGGING AND DROPPING
 function handleDragStart(e) {
     draggedShipElData = this
     shipSize = parseInt(this.getAttribute('ship-size'))
@@ -193,12 +191,11 @@ function handleDrop(e) {
 
         if (currentCell.classList.contains('cell')){
             for(let i = 0; i < shipSize; i++){
-                // currentCell.classList.remove('cell')
                 currentCell.classList.add('over', shipName)
                 shipCells.push(currentCell.getAttribute('id'))
                 currentCell = currentCell.nextElementSibling
             }
-            draggedShipElData.innerText = ' '
+            draggedShipElData.innerText = ' ' //*SHIPS SHOULD DISAPPEAR ONCE DRAGGED
         }
         this.classList.remove('cell')
         this.removeAttribute('id-hover', 'over')
@@ -209,8 +206,8 @@ function handleDrop(e) {
     canGameStart()
     }
 
-    //* THIS FUNCTION CHECKS WHETHER A SHIP CAN BE PLACED OR NOT BASED ON SEVERAL CONDITIONS
-    //* SUCH AS, THE SHIP MUST START AND END ON THE SAME ROW, THE SHIPS MUST NOT OVERLAP
+//* THIS FUNCTION CHECKS WHETHER A SHIP CAN BE PLACED OR NOT BASED ON SEVERAL CONDITIONS
+//* SUCH AS, THE SHIP MUST START AND END ON THE SAME ROW, THE SHIPS MUST NOT OVERLAP
 function isShipPlacementValid(shipSize, currentCell) {
     const cellsToCheck = []
     const currId = currentCell.getAttribute('id')
@@ -222,8 +219,8 @@ function isShipPlacementValid(shipSize, currentCell) {
       cellsToCheck.push(currentCell)
       currentCell = currentCell.nextElementSibling
     }
-  //IF STATEMENT TO THECK IF ANY OF THE CELLS CONTAINS THE CLASS "OVER" THAT REPRESENTS
-  //THE FACT THAT A SHIP HAS BEEN ALREADY PLACED THERE
+    //IF STATEMENT TO THECK IF ANY OF THE CELLS CONTAINS THE CLASS "OVER" THAT REPRESENTS
+    //THE FACT THAT A SHIP HAS BEEN ALREADY PLACED THERE
     if (cellsToCheck.some(cell => cell.classList.contains('over'))) {
 
       return false
@@ -251,11 +248,10 @@ function randomShipGenerator(board) {
             shipCells.push(startingPoint.getAttribute('id'))
             startingPoint = startingPoint.nextElementSibling
         }
-        
+
         randomPlacedShips.push({ id: ship, cells: shipCells })
         generatedShips++
     }
-
     return randomPlacedShips
 }
 
@@ -271,17 +267,18 @@ function randomCellSelector(board) {
 
 //* FUNCTIONS FOR DATA STORAGE AND MANAGEMENT
 
+//*THIS WILL STORE ALL THE INDEXES OF DIVS
 function getIndexOfDivs(board){
-const divs = board.querySelectorAll('div')
-const divsCoordinates = {}
-//LOOPING THROUGH ALL THE DIVS TO STORE THE INFO
-divs.forEach(function (div, index) {
-    const id = div.getAttribute('id')
-    if (id !== null) {
-        divsCoordinates[id] = index
-    }
-})
-return divsCoordinates
+    const divs = board.querySelectorAll('div')
+    const divsCoordinates = {}
+    //LOOPING THROUGH ALL THE DIVS TO STORE THE INFO
+    divs.forEach(function (div, index) {
+        const id = div.getAttribute('id')
+        if (id !== null) {
+            divsCoordinates[id] = index
+        }
+    })
+    return divsCoordinates
 }
 
 //* ONCE THE AI'S SHIPS HAVE BEEN GENERATED, WE'LL ASIGN A AISHIP CLASS TO THEIR
@@ -299,6 +296,8 @@ function updateAIShipCellsOnBoard(aiShips, board) {
     })
 }
 
+
+//*CREATING TURNS FOR THE AI, HE SHOULD HAVE 1 HIT PER TURN,  ALSO UPDATING MESSAGES
 function handleTurn () {
     if (checkGameOver()) { 
         return
@@ -334,6 +333,8 @@ function handleTurn () {
 function aiCellTargeting() {
     const playerCells = playerBoard.querySelectorAll('.cell')
 
+    //*IF THERE WAS A PREVIOUS HIT, THEN THE AI MUST TARGET THE LEFT AND RIGHT OF
+    //*THAT CELL IN ORDER TO DESTROY THE SHIP
     if (previousHit) {
         const id = previousHit.getAttribute('id')
         const col = id.charAt(0)
@@ -379,7 +380,8 @@ function updatePlayersHitShips(element){
     playersHitShips.push(id)
 }
 
-//*FUNCTION TO CHECK IF THE GAME CAN START
+//*FUNCTION TO CHECK IF THE GAME CAN START BASED ON CONDITIONS SUCH AS: PLAYER HAS
+//*PLACED ALL OF HIS AVAILABLE SHIPS, THIS IS ALSO HANDLING THE LANDING PAGE!
 function canGameStart() {
     const overCells = Array.from(playerBoard.querySelectorAll('.over'))
     
@@ -394,6 +396,7 @@ function canGameStart() {
         const tails = document.getElementById('tails')
         button.style.visibility = 'visible'
         
+        //*COIN FLIP FEATURE TO MAKE THE GAME MORE INTERACTIVE
         button.addEventListener('click', coinSound)
         heads.addEventListener('click', function () {
             assignRandomPlayer()
@@ -417,6 +420,8 @@ function canGameStart() {
                 messageUpdater(`AI STARTS!`)
             }
         })
+
+        //*RANDOMLY ASSIGNING A PLAYER 
         function assignRandomPlayer() {
             if (Math.random() < 0.5) {
                 currentPlayer = -1
@@ -429,31 +434,34 @@ function canGameStart() {
 }
 
 //*SCOREBOARD AND UPDATES
-const scoreboardContainer = document.createElement('div')
-scoreboardContainer.classList.add('scoreboard')
+    const scoreboardContainer = document.createElement('div')
+    scoreboardContainer.classList.add('scoreboard')
 
- //SCOREBOARD ELEMENTS
-const hitsElement = createStatElement('Hits', 'hits', playerStats.hits)
-const missesElement = createStatElement('Misses', 'misses', playerStats.misses)
-const scoreElement = createStatElement('Score', 'score', playerStats.score)
+ //*SCOREBOARD ELEMENTS
+    const hitsElement = createStatElement('Hits', 'hits', playerStats.hits)
+    const missesElement = createStatElement('Misses', 'misses', playerStats.misses)
+    const scoreElement = createStatElement('Score', 'score', playerStats.score)
 
-scoreboardContainer.append(hitsElement, missesElement, scoreElement)
+    scoreboardContainer.append(hitsElement, missesElement, scoreElement)
 
-document.body.appendChild(scoreboardContainer)
+    document.body.appendChild(scoreboardContainer)
 
 
+//*CREATING STATS ELEMENT FOR SCOREBOARD
 function createStatElement(label, id, initialValue) {
     const statElement = document.createElement('p')
     statElement.innerHTML = `${label}: <span id="${id}">${initialValue}</span>`
     return statElement
 }
 
+//*UPDATING THE SCOREBOARD AFTER EACH TURN WITH NEW POINTS, HITS AND MISSES
 function updateScoreboard() {
     hitsElement.querySelector('span').textContent = playerStats.hits
     missesElement.querySelector('span').textContent = playerStats.misses
     scoreElement.querySelector('span').textContent = playerStats.score
 }
 
+//*HANDLING HITS FOR SCOREBOARD AS WELL AS A STREAK BONUS
 function handleHit() {
     playerStats.hits++
     playerStats.score += 100
@@ -461,6 +469,9 @@ function handleHit() {
 
     if (playerStats.hits >= 2) {
         playerStats.score += 50
+        updateScoreboard()
+    } else if(playerStats.hits >=3) {
+        playerStats.score += 100
         updateScoreboard()
     }
 }
@@ -472,7 +483,9 @@ function handleMiss() {
     updateScoreboard()
 }
 
-//*FUNCTION TO CHECK IF THE GAME IS OVER
+//*FUNCTION TO CHECK IF THE GAME IS OVER, THIS IS GOING TO BE CALLED AFTER EACH TURN. THIS IS ALSO WERE
+//*THE ENDING PAGE GETS CREATED 
+
 function checkGameOver(){
     const endingPageDiv = document.createElement('div')
     endingPageDiv.className = 'ending-page'
@@ -486,18 +499,19 @@ function checkGameOver(){
         endingPageDiv.appendChild(message)
         document.body.insertBefore(endingPageDiv, document.body.firstChild)
     }
+    //*PLAYER WIN SCENARIO
     if (hitShips.length === aiShipCount){
         messageUpdater('PLAYER WINS!')
         title.innerText = 'PLAYER WINS!'
-        message.innerText = `Congratulations on your win! AI was about to conquer the world, but you sank all of your opponent's ships and now he is gone forever. However, he might be back rather sooner than later, so constantly hit that refresh button to keep an eye on him. `
+        message.innerText = `Congratulations on your win! AI was about to conquer the world, but you sank all of your opponent's ships and now he is gone. At least for now.. He might be back rather sooner than later, so constantly hit that refresh button to keep an eye on him. `
         const winner = new Audio()
         winner.autoplay = true
         winner.src = './assets/FX/winner.mp3'
         setTimeout(winner.play, 1000)
         const scoreboard = document.querySelector('.scoreboard')
         scoreboard.style.visibility = 'hidden'
-        setTimeout(endGame, 2000)
-    } else if (playersHitShips.length > 16) {
+        setTimeout(endGame, 1500)
+    } else if (playersHitShips.length > 16) { //*AI WIN SCENARIO
         messageUpdater('AI WINS!')
         title.innerText = 'AI WINS!'
         message.innerText = `Well played! Unfortunately, you did not manage to stop the AI from conquering the world. 3 months have passed since you two fought and he has defeated every country on Earth. P.S. -Pss.. quick hint for you, since the AI really enjoyed the battle, it changed the functionality of the refresh button and now it's a rewind wand.. Hit that button if you want to have another go!`
@@ -507,13 +521,12 @@ function checkGameOver(){
         loser.play()
         const scoreboard = document.querySelector('.scoreboard')
         scoreboard.style.visibility = 'hidden'
-        setTimeout(endGame, 2000)
+        setTimeout(endGame, 1500)
     }
     return
 }
 
 //*BACKGROUND MUSIC
-
 function bgMusic(){
     const bgMusic = new Audio()
     bgMusic.autoplay = true
@@ -532,53 +545,52 @@ for (let i = 0; i < 3; i++){
     button.className = 'btn btn-primary btn-lg'
     landingPage.appendChild(button) 
 }
+    //BOOTSTRAP ATTRIBUTES AND FX SOUNDS FOR CLICKING
+    const startButton = document.getElementById('f0')
+    startButton.innerText = 'START'
+    startButton.addEventListener('click', coinSound)
+    startButton.addEventListener('click', startButtonClickHandle)
+    
+    const aboutButton = document.getElementById('f1')
+    aboutButton.innerText = 'ABOUT'
+    aboutButton.setAttribute('type', 'button')
+    aboutButton.setAttribute('class', 'btn btn-primary')
+    aboutButton.setAttribute('data-bs-toggle', 'modal')
+    aboutButton.setAttribute('data-bs-target', "#exampleModal")
+    aboutButton.addEventListener('click', coinSound)
 
-const startButton = document.getElementById('f0')
-startButton.innerText = 'START'
-
-const aboutButton = document.getElementById('f1')
-aboutButton.innerText = 'ABOUT'
-aboutButton.setAttribute('type', 'button')
-aboutButton.setAttribute('class', 'btn btn-primary')
-aboutButton.setAttribute('data-bs-toggle', 'modal')
-aboutButton.setAttribute('data-bs-target', "#exampleModal")
-const helpButton = document.getElementById('f2')
-helpButton.innerText= 'HOW TO PLAY'
-helpButton.setAttribute('type', 'button')
-helpButton.setAttribute('class', 'btn btn-primary')
-helpButton.setAttribute('data-bs-toggle', 'modal')
-helpButton.setAttribute('data-bs-target', "#rulesModal")
-
-startButton.addEventListener('click', coinSound)
-aboutButton.addEventListener('click', coinSound)
-helpButton.addEventListener('click', coinSound)
-
-//*GET RID OF LANDING PAGE IN ORDER TO START THE GAME
+    const helpButton = document.getElementById('f2')
+    helpButton.addEventListener('click', coinSound)
+    helpButton.innerText= 'HOW TO PLAY'
+    helpButton.setAttribute('type', 'button')
+    helpButton.setAttribute('class', 'btn btn-primary')
+    helpButton.setAttribute('data-bs-toggle', 'modal')
+    helpButton.setAttribute('data-bs-target', "#rulesModal")
+    
+    
+//*GETING RID OF LANDING PAGE IN ORDER TO START THE GAME
 function startGame(classOf) {
     let divToRemove = document.querySelector(classOf)
-
+    
     if(divToRemove){
         while(divToRemove.firstChild){
             divToRemove.removeChild(divToRemove.firstChild)
         }
-
+    
         divToRemove.parentNode.removeChild(divToRemove)
         document.body.style.overflow = 'show'
     }
 }
-
+    
 function startButtonClickHandle(e) {
     startGame('.landing-page')
     bgMusic()
 }
-
-function coinSound (e) {
-    const coin = new Audio()
-    coin.src = './assets/FX/coin-flip.mp3'
-    coin.play()
-}
-
-startButton.addEventListener('click', startButtonClickHandle)
-
+    
+    function coinSound (e) {
+        const coin = new Audio()
+        coin.src = './assets/FX/coin-flip.mp3'
+        coin.play()
+    }
 }
 window.addEventListener('DOMContentLoaded', init)
