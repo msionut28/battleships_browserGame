@@ -1,7 +1,7 @@
 function init() {
     //*GENERATING GRID
-    const playerBoard = document.querySelector('.player-grid')
     const aiBoard = document.querySelector('.ai-grid')
+    const playerBoard = document.querySelector('.player-grid')
     
     //*GRID CONFIG & GENERAL DATA
     
