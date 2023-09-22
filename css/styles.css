@@ -71,12 +71,24 @@
 }
 
 .endTitle, .endMessage{
-  color: white;
+  color:#d9ff0f;
   text-align: center;
 }
 
 .endMessage {
   margin-top: 300px;
+}
+
+#restart {
+margin-top: 5vh;
+margin-left: 37vw;
+background-color: darkgray;
+color: #d9ff0f;
+}
+
+#restart:hover {
+  background: #d9ff0f;
+  color: darkgray;
 }
 /* SCOREBOARD, MESSAGE AND TITLE  */
 #message { 

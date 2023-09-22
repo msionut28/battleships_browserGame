@@ -497,13 +497,22 @@ function checkGameOver(){
     function endGame(){
         endingPageDiv.appendChild(title)
         endingPageDiv.appendChild(message)
+        const button = document.createElement('button')
+        button.setAttribute('type', 'button')
+        button.setAttribute('id', `restart`)
+        button.className = 'btn btn-primary btn-lg'
+        button.addEventListener('click',() => {
+            location.reload();
+        })
+        button.innerText = 'HAVE ANOTHER GO!'
+        endingPageDiv.appendChild(button)
         document.body.insertBefore(endingPageDiv, document.body.firstChild)
     }
     //*PLAYER WIN SCENARIO
     if (hitShips.length === aiShipCount){
         messageUpdater('PLAYER WINS!')
         title.innerText = 'PLAYER WINS!'
-        message.innerText = `Congratulations on your win! AI was about to conquer the world, but you sank all of your opponent's ships and now he is gone. At least for now.. He might be back rather sooner than later, so constantly hit that refresh button to keep an eye on him. `
+        message.innerText = `Congratulations on your win! AI was about to conquer the world, but you sank all of your opponent's ships and now he is gone. At least for now.. He might be back rather sooner than later, so make sure you hit that restart button to keep an eye on him. `
         const winner = new Audio()
         winner.autoplay = true
         winner.src = './assets/FX/winner.mp3'
@@ -514,7 +523,7 @@ function checkGameOver(){
     } else if (playersHitShips.length > 16) { //*AI WIN SCENARIO
         messageUpdater('AI WINS!')
         title.innerText = 'AI WINS!'
-        message.innerText = `Well played! Unfortunately, you did not manage to stop the AI from conquering the world. 3 months have passed since you two fought and he has defeated every country on Earth. P.S. -Pss.. quick hint for you, since the AI really enjoyed the battle, it changed the functionality of the refresh button and now it's a rewind wand.. Hit that button if you want to have another go!`
+        message.innerText = `Well played! Unfortunately, you did not manage to stop the AI from conquering the world. 3 months have passed since you two fought and he has defeated every country on Earth. P.S. -Pss.. quick hint for you, since the AI really enjoyed the battle, it gave you the opportunity to fight him once again and summoned a button that acts as a a rewind wand.. Hit that button if you want to have another go!`
         const loser = new Audio()
         loser.autoplay = true
         loser.src = './assets/FX/fail.mp3'
