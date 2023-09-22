@@ -512,7 +512,7 @@ function checkGameOver(){
     if (hitShips.length === aiShipCount){
         messageUpdater('PLAYER WINS!')
         title.innerText = 'PLAYER WINS!'
-        message.innerText = `Congratulations on your win! AI was about to conquer the world, but you sank all of your opponent's ships and now he is gone. At least for now.. He might be back rather sooner than later, so make sure you hit that restart button to keep an eye on him. `
+        message.innerText = `Congratulations on your win! AI was about to conquer the world, but you sank all of your opponent's ships and now he is gone. At least for now.. He might be back sooner rather than later, so make sure you hit that restart button to keep an eye on him. `
         const winner = new Audio()
         winner.autoplay = true
         winner.src = './assets/FX/winner.mp3'
