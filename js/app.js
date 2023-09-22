@@ -106,6 +106,9 @@ function handleCellClick(e) {
         newDiv.innerHTML = '<i class="fa-sharp fa-regular fa-circle-xmark"></i>'
         currentPlayer *= -1
         messageUpdater(`AI'S TURN!`)
+        const miss = new Audio()
+        miss.src = './assets/FX/miss.mp3'
+        miss.play()
         handleMiss()
         setTimeout(handleTurn, 400)
     } else if (currClass === 'aiship'){
@@ -116,6 +119,9 @@ function handleCellClick(e) {
         checkGameOver() 
         currentPlayer *= -1
         messageUpdater('YOU HAVE SUCCESFULLY HIT A SHIP!')
+        const hit = new Audio()
+        hit.src = './assets/FX/hit.mp3'
+        hit.play()
         setTimeout(handleTurn, 500)
     }
     cell.appendChild(newDiv)
@@ -388,10 +394,12 @@ function canGameStart() {
         const tails = document.getElementById('tails')
         button.style.visibility = 'visible'
         
+        button.addEventListener('click', coinSound)
         heads.addEventListener('click', function () {
             assignRandomPlayer()
             button.style.visibility = 'hidden'
             scoreboard.style.visibility = 'visible'
+            coinSound()
             if (currentPlayer === 1) {
                 messageUpdater(`PLAYER STARTS!`)
             } else if (currentPlayer === -1) {
@@ -402,6 +410,7 @@ function canGameStart() {
             assignRandomPlayer()
             button.style.visibility = 'hidden'
             scoreboard.style.visibility = 'visible'
+            coinSound()
             if (currentPlayer === 1) {
                 messageUpdater(`PLAYER STARTS!`)
             } else if (currentPlayer === -1) {
@@ -540,6 +549,10 @@ helpButton.setAttribute('class', 'btn btn-primary')
 helpButton.setAttribute('data-bs-toggle', 'modal')
 helpButton.setAttribute('data-bs-target', "#rulesModal")
 
+startButton.addEventListener('click', coinSound)
+aboutButton.addEventListener('click', coinSound)
+helpButton.addEventListener('click', coinSound)
+
 //*GET RID OF LANDING PAGE IN ORDER TO START THE GAME
 function startGame(classOf) {
     let divToRemove = document.querySelector(classOf)
@@ -557,6 +570,12 @@ function startGame(classOf) {
 function startButtonClickHandle(e) {
     startGame('.landing-page')
     bgMusic()
+}
+
+function coinSound (e) {
+    const coin = new Audio()
+    coin.src = './assets/FX/coin-flip.mp3'
+    coin.play()
 }
 
 startButton.addEventListener('click', startButtonClickHandle)
