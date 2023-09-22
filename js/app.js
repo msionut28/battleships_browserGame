@@ -1,4 +1,4 @@
-let currentPlayer = 1
+
 
 function init() {
     //*GENERATING GRID
@@ -12,6 +12,7 @@ function init() {
     const battleships = ['carrier', 'battleship', 'cruiser', 'submarine', 'destroyer']
     const battleshipsLengths = [5, 4, 3, 3, 2]
     const columnIndex = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
+    let currentPlayer = 1
     const height = 10
     const playerColumns = document.querySelector('.player-columns')
     const playerRows = document.querySelector('.player-rows')
@@ -26,6 +27,7 @@ function init() {
         score: 1000,
     }
     let previousHit 
+    const randomPlacedShips = []
 
     
     //*PLAYER'S BOARD
@@ -225,32 +227,32 @@ function isShipPlacementValid(shipSize, currentCell) {
 }
 
 //*FUNCTIONS FOR AI BATTLESHIP PLACEMENT
-
 function randomShipGenerator(board) {
-    const randomPlacedShips = []
+    let generatedShips = 0
 
-    for (let i = 0; i < battleships.length; i++) {
-        let ship = battleships[i];
-        let shipSize = battleshipsLengths[i];
-        let shipCells = [];
-    
-        let startingPoint = randomCellSelector(board);
-    
-        while (startingPoint && !isShipPlacementValid(shipSize, startingPoint, board)) {
-            startingPoint = randomCellSelector(board);
+    while (generatedShips < 5) {
+        let ship = battleships[generatedShips]
+        let shipSize = battleshipsLengths[generatedShips]
+        let shipCells = []
+
+        let startingPoint = null
+
+        while (!startingPoint || !isShipPlacementValid(shipSize, startingPoint, board)) {
+            startingPoint = randomCellSelector(board)
         }
-    
-        if (startingPoint) {
-            for (let j = 0; j < shipSize; j++) {
-                shipCells.push(startingPoint.getAttribute('id'));
-                startingPoint = startingPoint.nextElementSibling;
-            }
-            randomPlacedShips.push({ id: ship, cells: shipCells });
+
+        for (let j = 0; j < shipSize; j++) {
+            shipCells.push(startingPoint.getAttribute('id'))
+            startingPoint = startingPoint.nextElementSibling
         }
+        
+        randomPlacedShips.push({ id: ship, cells: shipCells })
+        generatedShips++
     }
 
     return randomPlacedShips
 }
+
 
 //*RANDOM CELL SELECTOR THAT WILL BE USED FOR MULTIPLE OTHER FUNCTIONS
 function randomCellSelector(board) {
@@ -358,12 +360,6 @@ function aiCellTargeting() {
 //*FUNCTION TO DISPLAY WHO'S TURN IT IS
 function messageUpdater(message){
     textToUpdate = document.getElementById('message')
-
-    // if (currentPlayer === 1) {
-    //     return textToUpdate.innerText = `PLAYER'S TURN`
-    // } else if (currentPlayer === -1) {
-    //     return textToUpdate.innerText = `AI'S TURN`
-    // }
     return textToUpdate.innerText = message
 }
 
@@ -475,12 +471,13 @@ function checkGameOver(){
     title.setAttribute('class', 'endTitle')
     const message =document.createElement('p')
     message.setAttribute('class', 'endMessage')
+    const aiShipCount = aiShipDivs.length
     function endGame(){
         endingPageDiv.appendChild(title)
         endingPageDiv.appendChild(message)
         document.body.insertBefore(endingPageDiv, document.body.firstChild)
     }
-    if (hitShips.length > 16){
+    if (hitShips.length === aiShipCount){
         messageUpdater('PLAYER WINS!')
         title.innerText = 'PLAYER WINS!'
         message.innerText = `Congratulations on your win! AI was about to conquer the world, but you sank all of your opponent's ships and now he is gone forever. However, he might be back rather sooner than later, so constantly hit that refresh button to keep an eye on him. `
