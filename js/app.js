@@ -1,5 +1,4 @@
 let currentPlayer = 1
-let huntingPhase = true
 
 function init() {
     //*GENERATING GRID
@@ -19,9 +18,15 @@ function init() {
     const rowIndex = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
     const width = 10
     const cellCount = width * height
-    const hitShips = [];
+    const hitShips = []
     const playersHitShips =[]
+    const playerStats = {
+        hits: 0,
+        misses: 0,
+        score: 1000,
+    }
     let previousHit 
+
     
     //*PLAYER'S BOARD
     boardGenerator(playerBoard)
@@ -37,7 +42,7 @@ function init() {
     
     //*DATA MANAGEMENT
     const playerBoardCoordinates = getIndexOfDivs(playerBoard)
-    const placedShips = [];
+    const placedShips = []
     
     canGameStart()
 
@@ -85,29 +90,31 @@ function idSetter(boardSelector) {
 }
 
 function handleCellClick(e) {
-    e.preventDefault(); 
+    e.preventDefault()
 
     const cell = this
     const currClass = cell.getAttribute('class')
     const divsInCell = cell.querySelectorAll('div').length
     const playerBoard = cell.parentElement.classList.contains('player-grid')
-
     const newDiv = document.createElement('div')
-    newDiv.innerText = '.'
     if (playerBoard || divsInCell > 0 || currentPlayer === 0){
         return false
     } else if (currClass === 'cell') {
         newDiv.setAttribute('id', 'red')
+        newDiv.innerHTML = '<i class="fa-sharp fa-regular fa-circle-xmark"></i>'
         currentPlayer *= -1
-        messageUpdater('TEST')
+        messageUpdater(`AI'S TURN!`)
+        handleMiss()
         setTimeout(handleTurn, 400)
     } else if (currClass === 'aiship'){
         newDiv.setAttribute('id', 'green')
+        newDiv.innerHTML = '<i class="fa-sharp fa-solid fa-skull-crossbones fa-fade"></i>'
+        handleHit()
         updateHitShips(this)
-        checkGameOver() //!COME BACK TO UNCOMMENT THIS
+        checkGameOver() 
         currentPlayer *= -1
-        messageUpdater('TEST')
-        setTimeout(handleTurn, 400)
+        messageUpdater('YOU HAVE SUCCESFULLY HIT A SHIP!')
+        setTimeout(handleTurn, 500)
     }
     cell.appendChild(newDiv)
 
@@ -137,9 +144,8 @@ aiShipDivs.forEach(function (cell) {
     //* STYLING OUT THE FUNCTIONS AND THE EVENTS THAT SHOULD HAPPEN WHILE DRAGGING
     //* AND DROPPING
 function handleDragStart(e) {
-    draggedShipElData = this;
+    draggedShipElData = this
     shipSize = parseInt(this.getAttribute('ship-size'))
-    canGameStart()
 }
 
 function handleDragOver(e) {
@@ -160,17 +166,21 @@ function handleDrop(e) {
     e.preventDefault()
     if (this.parentElement.classList.contains('ai-grid')){
         this.removeAttribute('id-hover', 'over')
-        draggedShipElData.style.opacity = 1;
-        return;
+        draggedShipElData.style.opacity = 1
+        return
     }
-
+    const placedShip = new Audio()
+    placedShip.src = './assets/FX/placedShip.wav'
+    placedShip.play()
     // * BY THE AID OF THIS FOR LOOP, ALL OF THE DIVS CONTAINED BY A SHIP WILL 
     //* ACCORDINGLY UPDATE THE BOARD, INSTEAD OF JUST ONE DIV!
     const shipName = draggedShipElData.className.split(' ')[0]
 
+    const hand = document.querySelector('.moving-div')
+    hand.style.visibility = 'hidden'
+
     if (isShipPlacementValid(shipSize, this)) {
         let currentCell = this
-        const cellsToCheck = [] //*USED FOR CHECKING IF SHIP CAN BE PLACED
         const shipCells = [] //*USED FOR STORING INFORMATION REGARDING SHIP COORDINATES
 
         if (currentCell.classList.contains('cell')){
@@ -178,9 +188,9 @@ function handleDrop(e) {
                 // currentCell.classList.remove('cell')
                 currentCell.classList.add('over', shipName)
                 shipCells.push(currentCell.getAttribute('id'))
-                currentCell = currentCell.nextElementSibling;
+                currentCell = currentCell.nextElementSibling
             }
-            draggedShipElData.innerHTML = ''
+            draggedShipElData.innerText = ' '
         }
         this.classList.remove('cell')
         this.removeAttribute('id-hover', 'over')
@@ -194,24 +204,21 @@ function handleDrop(e) {
     //* THIS FUNCTION CHECKS WHETHER A SHIP CAN BE PLACED OR NOT BASED ON SEVERAL CONDITIONS
     //* SUCH AS, THE SHIP MUST START AND END ON THE SAME ROW, THE SHIPS MUST NOT OVERLAP
 function isShipPlacementValid(shipSize, currentCell) {
-    const cellsToCheck = [];
+    const cellsToCheck = []
     const currId = currentCell.getAttribute('id')
     const currCol = currId.slice(0, 1)
     for (let i = 0; i < shipSize; i++) {
       if (!currentCell.classList.contains('cell') || currentCell.classList.contains('over') || currCol !== currentCell.getAttribute('id').slice(0, 1)) {
-        return false;
+        return false
       }
-      cellsToCheck.push(currentCell);
-    //   if (cellsToCheck.length < shipSize){
-    //     return false;
-    //   }
-      currentCell = currentCell.nextElementSibling;
+      cellsToCheck.push(currentCell)
+      currentCell = currentCell.nextElementSibling
     }
   //IF STATEMENT TO THECK IF ANY OF THE CELLS CONTAINS THE CLASS "OVER" THAT REPRESENTS
   //THE FACT THAT A SHIP HAS BEEN ALREADY PLACED THERE
     if (cellsToCheck.some(cell => cell.classList.contains('over'))) {
 
-      return false;
+      return false
     }
     return true
     
@@ -223,28 +230,26 @@ function randomShipGenerator(board) {
     const randomPlacedShips = []
 
     for (let i = 0; i < battleships.length; i++) {
-        const ship = battleships[i]
-        const shipSize = battleshipsLengths[i]
-        const shipCells = []
-
-        let startingPoint = randomCellSelector(board)
-
+        let ship = battleships[i];
+        let shipSize = battleshipsLengths[i];
+        let shipCells = [];
+    
+        let startingPoint = randomCellSelector(board);
+    
         while (startingPoint && !isShipPlacementValid(shipSize, startingPoint, board)) {
-            startingPoint = randomCellSelector(board)
+            startingPoint = randomCellSelector(board);
         }
-
+    
         if (startingPoint) {
             for (let j = 0; j < shipSize; j++) {
-                shipCells.push(startingPoint.getAttribute('id'))
-                startingPoint = startingPoint.nextElementSibling
+                shipCells.push(startingPoint.getAttribute('id'));
+                startingPoint = startingPoint.nextElementSibling;
             }
-            randomPlacedShips.push({ id: ship, cells: shipCells })
-        } else {
-            j--
+            randomPlacedShips.push({ id: ship, cells: shipCells });
         }
     }
 
-    return randomPlacedShips;
+    return randomPlacedShips
 }
 
 //*RANDOM CELL SELECTOR THAT WILL BE USED FOR MULTIPLE OTHER FUNCTIONS
@@ -260,7 +265,7 @@ function randomCellSelector(board) {
 
 function getIndexOfDivs(board){
 const divs = board.querySelectorAll('div')
-const divsCoordinates = {};
+const divsCoordinates = {}
 //LOOPING THROUGH ALL THE DIVS TO STORE THE INFO
 divs.forEach(function (div, index) {
     const id = div.getAttribute('id')
@@ -277,73 +282,76 @@ return divsCoordinates
 function updateAIShipCellsOnBoard(aiShips, board) {
     aiShips.forEach(function (ship) {
         ship.cells.forEach(function (cellId) {
-            const cell = board.querySelector(`#${cellId}`);
+            const cell = board.querySelector(`#${cellId}`)
             if (cell) {
-                cell.removeAttribute('class');
+                cell.removeAttribute('class')
                 cell.setAttribute('class', 'aiship')
             }
-        });
-    });
+        })
+    })
 }
 
 function handleTurn () {
     if (checkGameOver()) { 
-        console.log('game');
-        return; 
+        return
     }
     if (currentPlayer === -1){   //! -1 IS THE AI
-        const cellsToTarget = aiCellTargeting();
+        const cellsToTarget = aiCellTargeting()
         const newDiv = document.createElement('div')
-        newDiv.innerText = '.'
         if (cellsToTarget.classList.contains('over')){
             cellsToTarget.classList.add('hit')
             newDiv.setAttribute('id', 'green')
+            newDiv.innerHTML = '<i class="fa-sharp fa-solid fa-skull-crossbones fa-fade"></i>'
             updatePlayersHitShips(cellsToTarget)
             previousHit = cellsToTarget
-            console.log(previousHit);
             checkGameOver() 
         } else {
             cellsToTarget.classList.add('miss')
             newDiv.setAttribute('id', 'red')
+            newDiv.innerHTML = '<i class="fa-sharp fa-regular fa-circle-xmark"></i>'
         }
         cellsToTarget.appendChild(newDiv)
         currentPlayer *= -1 //!SWITCHING TURNS
-        messageUpdater(`${currentPlayer}'s Turn!`)
+        if (currentPlayer === 1) {
+            messageUpdater(`PLAYER'S TURN!`)
+        } else if (currentPlayer === -1) {
+            messageUpdater(`AI's TURN!`)
+        }
     } else if (currentPlayer === 1){ //!1 IS THE PLAYER
-        console.log(`PLAYER'S TURN`);
+        console.log(`PLAYER'S TURN`)
     }
 }                                       
 
 //*RANDOM PICKER FOR AI'S TURN AS WELL AS TARGET & HUNT
 function aiCellTargeting() {
-    const playerCells = playerBoard.querySelectorAll('.cell');
+    const playerCells = playerBoard.querySelectorAll('.cell')
 
     if (previousHit) {
-        const id = previousHit.getAttribute('id');
-        const col = id.charAt(0);
-        let row = parseInt(id.charAt(1));
+        const id = previousHit.getAttribute('id')
+        const col = id.charAt(0)
+        let row = parseInt(id.charAt(1))
         const targetCells = [
             document.getElementById(`${col}${row - 1}`), // LEFT
             document.getElementById(`${col}${row + 1}`), // RIGHT
-        ];
+        ]
         const validTargets = targetCells.filter(cell => {
-            return cell && !cell.classList.contains('hit') && !cell.classList.contains('miss');
-        });
+            return cell && !cell.classList.contains('hit') && !cell.classList.contains('miss')
+        })
 
         //*CHECKING WHETHER THERE ARE ANY POSSIBLE TARGETS LEFT OR NOT
         if (validTargets.length > 0) {
-            const randomPick = Math.floor(Math.random() * validTargets.length);
-            return validTargets[randomPick];
+            const randomPick = Math.floor(Math.random() * validTargets.length)
+            return validTargets[randomPick]
         }
     }
 
-    const cellsShouldTarget = Array.from(playerCells).filter(cell => !cell.classList.contains('hit') && !cell.classList.contains('miss'));
+    const cellsShouldTarget = Array.from(playerCells).filter(cell => !cell.classList.contains('hit') && !cell.classList.contains('miss'))
     if (cellsShouldTarget.length === 0) {
-        return;
+        return
     }
 
-    const randomPick = Math.floor(Math.random() * cellsShouldTarget.length);
-    return cellsShouldTarget[randomPick];
+    const randomPick = Math.floor(Math.random() * cellsShouldTarget.length)
+    return cellsShouldTarget[randomPick]
 }
 
 
@@ -351,11 +359,11 @@ function aiCellTargeting() {
 function messageUpdater(message){
     textToUpdate = document.getElementById('message')
 
-    if (currentPlayer === 1) {
-        return textToUpdate.innerText = `PLAYER'S TURN`
-    } else if (currentPlayer === -1) {
-        return textToUpdate.innerText = `AI'S TURN`
-    }
+    // if (currentPlayer === 1) {
+    //     return textToUpdate.innerText = `PLAYER'S TURN`
+    // } else if (currentPlayer === -1) {
+    //     return textToUpdate.innerText = `AI'S TURN`
+    // }
     return textToUpdate.innerText = message
 }
 
@@ -371,66 +379,190 @@ function updatePlayersHitShips(element){
 
 //*FUNCTION TO CHECK IF THE GAME CAN START
 function canGameStart() {
-    const overCells = Array.from(playerBoard.querySelectorAll('.over'));
+    const overCells = Array.from(playerBoard.querySelectorAll('.over'))
     
     if (overCells.length < 16) {
-        currentPlayer = 0;
-        messageUpdater('PLEASE PLACE YOUR SHIPS');
+        currentPlayer = 0
+        messageUpdater('PLEASE PLACE YOUR SHIPS')
     } else {
         messageUpdater('THE GAME CAN START! PLEASE PRESS THE BUTTON')
         const button = document.getElementById('coin-flip')
         const heads = document.getElementById('heads')
+        const scoreboard = document.querySelector('.scoreboard')
         const tails = document.getElementById('tails')
         button.style.visibility = 'visible'
         
         heads.addEventListener('click', function () {
-            assignRandomPlayer();
+            assignRandomPlayer()
             button.style.visibility = 'hidden'
-            messageUpdater(`${currentPlayer} STARTS!`)
-        });
+            scoreboard.style.visibility = 'visible'
+            if (currentPlayer === 1) {
+                messageUpdater(`PLAYER STARTS!`)
+            } else if (currentPlayer === -1) {
+                messageUpdater(`AI STARTS!`)
+            }
+        })
         tails.addEventListener('click', function () {
             assignRandomPlayer()
             button.style.visibility = 'hidden'
-            messageUpdater(`${currentPlayer} STARTS!`)
-        });
+            scoreboard.style.visibility = 'visible'
+            if (currentPlayer === 1) {
+                messageUpdater(`PLAYER STARTS!`)
+            } else if (currentPlayer === -1) {
+                messageUpdater(`AI STARTS!`)
+            }
+        })
         function assignRandomPlayer() {
             if (Math.random() < 0.5) {
-                currentPlayer = -1;
+                currentPlayer = -1
+                setTimeout(handleTurn, 500)
+            } else{
+                currentPlayer = 1
             } 
-                currentPlayer = 1;
         }
     }
-    console.log(overCells.length);
+}
+
+//*SCOREBOARD AND UPDATES
+const scoreboardContainer = document.createElement('div')
+scoreboardContainer.classList.add('scoreboard')
+
+ //SCOREBOARD ELEMENTS
+const hitsElement = createStatElement('Hits', 'hits', playerStats.hits)
+const missesElement = createStatElement('Misses', 'misses', playerStats.misses)
+const scoreElement = createStatElement('Score', 'score', playerStats.score)
+
+scoreboardContainer.append(hitsElement, missesElement, scoreElement)
+
+document.body.appendChild(scoreboardContainer)
+
+
+function createStatElement(label, id, initialValue) {
+    const statElement = document.createElement('p')
+    statElement.innerHTML = `${label}: <span id="${id}">${initialValue}</span>`
+    return statElement
+}
+
+function updateScoreboard() {
+    hitsElement.querySelector('span').textContent = playerStats.hits
+    missesElement.querySelector('span').textContent = playerStats.misses
+    scoreElement.querySelector('span').textContent = playerStats.score
+}
+
+function handleHit() {
+    playerStats.hits++
+    playerStats.score += 100
+    updateScoreboard()
+
+    if (playerStats.hits >= 2) {
+        playerStats.score += 50
+        updateScoreboard()
+    }
+}
+
+
+function handleMiss() {
+    playerStats.misses++
+    playerStats.score -= 20
+    updateScoreboard()
 }
 
 //*FUNCTION TO CHECK IF THE GAME IS OVER
 function checkGameOver(){
-    if (hitShips.length > 16){
-        currentPlayer = 0 
-        messageUpdater('PLAYER WINS!')
-    } else if (playersHitShips > 17) {
-        currentPlayer = 0
-        messageUpdater('AI WINS!')
+    const endingPageDiv = document.createElement('div')
+    endingPageDiv.className = 'ending-page'
+    const title = document.createElement('h1')
+    title.setAttribute('class', 'endTitle')
+    const message =document.createElement('p')
+    message.setAttribute('class', 'endMessage')
+    function endGame(){
+        endingPageDiv.appendChild(title)
+        endingPageDiv.appendChild(message)
+        document.body.insertBefore(endingPageDiv, document.body.firstChild)
     }
-    return;
+    if (hitShips.length > 16){
+        messageUpdater('PLAYER WINS!')
+        title.innerText = 'PLAYER WINS!'
+        message.innerText = `Congratulations on your win! AI was about to conquer the world, but you sank all of your opponent's ships and now he is gone forever. However, he might be back rather sooner than later, so constantly hit that refresh button to keep an eye on him. `
+        const winner = new Audio()
+        winner.autoplay = true
+        winner.src = './assets/FX/winner.mp3'
+        setTimeout(winner.play, 1000)
+        const scoreboard = document.querySelector('.scoreboard')
+        scoreboard.style.visibility = 'hidden'
+        setTimeout(endGame, 2000)
+    } else if (playersHitShips.length > 16) {
+        messageUpdater('AI WINS!')
+        title.innerText = 'AI WINS!'
+        message.innerText = `Well played! Unfortunately, you did not manage to stop the AI from conquering the world. 3 months have passed since you two fought and he has defeated every country on Earth. P.S. -Pss.. quick hint for you, since the AI really enjoyed the battle, it changed the functionality of the refresh button and now it's a rewind wand.. Hit that button if you want to have another go!`
+        const loser = new Audio()
+        loser.autoplay = true
+        loser.src = './assets/FX/fail.mp3'
+        loser.play()
+        const scoreboard = document.querySelector('.scoreboard')
+        scoreboard.style.visibility = 'hidden'
+        setTimeout(endGame, 2000)
+    }
+    return
 }
 
+//*BACKGROUND MUSIC
 
-//  function getCoordinatesOfShips(board){
-//     const divs = board.querySelectorAll('div')
-//     const shipCoordinates = {};
-//     divs.forEach(function (div, index) {
-//         const id = div.getAttribute('id')
-//         for (let i = 0; i < battleships.length; i++){
-//             if (id === battleships[i]){
-//                 shipCoordinates[index] = id
-//             }
-//         }
-//     })
-//     return shipCoordinates
-//  }
+function bgMusic(){
+    const bgMusic = new Audio()
+    bgMusic.autoplay = true
+    bgMusic.loop = true
+    bgMusic.src = './assets/FX/backgroundMusic.mp3'
+    bgMusic.play()
+}
 
-// console.log(playerBoardCoordinates, placedShips, aiShips, hitShips, playersHitShips, aiCellTargeting());
-console.log(aiShips);
+//*LANDING PAGE
+    //CREATING BUTTONS FOR LANDING PAGE AND APPENDING THEM
+for (let i = 0; i < 3; i++){
+    const landingPage = document.querySelector('.landing-page')
+    const button = document.createElement('button')
+    button.setAttribute('type', 'button')
+    button.setAttribute('id', `f${i}`)
+    button.className = 'btn btn-primary btn-lg'
+    landingPage.appendChild(button) 
+}
+
+const startButton = document.getElementById('f0')
+startButton.innerText = 'START'
+
+const aboutButton = document.getElementById('f1')
+aboutButton.innerText = 'ABOUT'
+aboutButton.setAttribute('type', 'button')
+aboutButton.setAttribute('class', 'btn btn-primary')
+aboutButton.setAttribute('data-bs-toggle', 'modal')
+aboutButton.setAttribute('data-bs-target', "#exampleModal")
+const helpButton = document.getElementById('f2')
+helpButton.innerText= 'HOW TO PLAY'
+helpButton.setAttribute('type', 'button')
+helpButton.setAttribute('class', 'btn btn-primary')
+helpButton.setAttribute('data-bs-toggle', 'modal')
+helpButton.setAttribute('data-bs-target', "#rulesModal")
+
+//*GET RID OF LANDING PAGE IN ORDER TO START THE GAME
+function startGame(classOf) {
+    let divToRemove = document.querySelector(classOf)
+
+    if(divToRemove){
+        while(divToRemove.firstChild){
+            divToRemove.removeChild(divToRemove.firstChild)
+        }
+
+        divToRemove.parentNode.removeChild(divToRemove)
+        document.body.style.overflow = 'show'
+    }
+}
+
+function startButtonClickHandle(e) {
+    startGame('.landing-page')
+    bgMusic()
+}
+
+startButton.addEventListener('click', startButtonClickHandle)
+
 }
 window.addEventListener('DOMContentLoaded', init)

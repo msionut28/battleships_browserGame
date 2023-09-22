@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="./css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="./js/app.js" charset="utf-8"></script>
+    <script src="https://kit.fontawesome.com/a190f5794a.js" crossorigin="anonymous"></script>
     <style>
         @font-face {
             font-family: dotgothic;
@@ -18,47 +19,84 @@
         }
     </style>
 </head>
-<body><div class="ui">
-    <p id="message"></p>
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" id="coin-flip">
-FLIP A COIN!
-  </button>
-  
-  <!-- Modal -->
-  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<body>
+    <div class="landing-page">
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">BATTLESHIP STYLE CLONE</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  While studying at General Assembly, I had been given a project to deliver within one week. The task was to create a browser-based game, using HTML, CSS and JS. Most lines were written in JS, mainly focusing on manipulating DOM, creating functions and storing data for managing in arrays and objects. However, this project also contains roughly 250 lines of CSS code.
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        <div class="modal fade" id="rulesModal" tabindex="-1" aria-labelledby="rulesModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">HOW TO PLAY</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Battleship (also known as Battleships or Sea Battle) is a strategy type guessing game for two players. It is played on ruled grids (paper or board) on which each player's fleet of warships are marked. The locations of the fleets are concealed from the other player. Players alternate turns calling "shots" at the other player's ships, and the objective of the game is to destroy the opposing player's fleet.
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+    <div class="ui">
+        <p id="message"></p>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" id="coin-flip">
+            FLIP A COIN!
+        </button>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
+        <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="staticBackdropLabel">HEADS OR TAILS?</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">HEADS OR TAILS?</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          CHOOSE WISELY
+            CHOOSE WISELY
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="heads">HEADS</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="tails">TAILS</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="heads">HEADS</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="tails">TAILS</button>
         </div>
-      </div>
     </div>
-  </div>
 </div>
-    <main class="grid-wrapper">
-        <div class="player-container">
-            <div class="player-rows"></div>
-            <div class="player-columns"></div>
-            <section class="player-grid"></section>
-            <section class="battleships">
-                <div class="carrier ship" draggable="true" ship-size="5">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </div>
-                <div class="battleship ship" draggable="true" ship-size="4">
-                    <div></div>
+</div>
+</div>
+<main class="grid-wrapper">
+    <div class="player-container">
+        <div class="grid-name">PLAYER'S BOARD</div>
+        <div class="player-rows"></div>
+        <div class="player-columns"></div>
+        <section class="player-grid"></section>
+        <section class="battleships">
+            <div class="moving-div"><i class="fa-regular fa-hand-pointer"></i></div>
+            <div class="carrier ship" draggable="true" ship-size="5">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="battleship ship" draggable="true" ship-size="4">
+                <div></div>
                     <div></div>
                     <div></div>
                     <div></div>
@@ -80,6 +118,7 @@ FLIP A COIN!
             </div>
         </div>
         <div class="ai-container">
+            <div class="grid-name">AI'S BOARD</div>
             <div class="ai-rows"></div>
             <div class="ai-columns"></div>
             <section class="ai-grid" draggable="false"></section>
