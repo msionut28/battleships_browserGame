@@ -32,12 +32,12 @@ The game can be played and tested [here](https://msionut28.github.io/Battleships
 ![My Excalidraw wireframe](/assets/wireframe.png)
 
 The first step in building out my project was to have a plan to follow. I had layed out my basic grid structure, as well as things that I had to focus on, but also features of the game
-such as: extra points for streak hits. I was initially planning on different design for showing up the hit and missed ships, however throughout developing my project I thought that
+such as: extra points for streak hits. I was initially planning on a different design for showing up the hit and missed ships, however throughout developing my project I thought that
 using special characters instead of solid boxes would be more beneficial. 
 
 ## 7. CODING 💻
 
-The top section of my code was mainly focused on declaring variables so it would be easier to read, but also to find and compare. For the landing page, I have created a `<div>` in the index.html and appended buttons with attributes specific to Bootstrap using JavaScript DOM.
+The top section of my code was mainly focused on declaring variables so it would be easier to read, but also to find and compare them. For the landing page, I have created a **`<div>`** in the index.html and appended buttons with attributes specific to Bootstrap using JavaScript DOM.
 ```js
 for (let i = 0; i < 3; i++){
     const landingPage = document.querySelector('.landing-page')
@@ -48,7 +48,7 @@ for (let i = 0; i < 3; i++){
     landingPage.appendChild(button) 
 }
 ```
-Once the start button has been pressed, the `<div>` and all of its child elements gets removed from the parent node, so the playing boards would be visible and the game could start. By doing so, there was no need for multiple HTML files to be used, therefore to project was as simple as possible.
+Once the start button has been pressed, the **`<div>`** and all of its child elements gets removed from the parent node, so the playing boards would be visible and the game could start. By doing so, there was no need for multiple HTML files to be used, therefore to project was as simple as possible.
 
 ```js
 function startGame(classOf) {
@@ -65,7 +65,7 @@ function startGame(classOf) {
 ```
 
 
-The coding process of actual gameplay starts by laying out the grids of the game, based on 3 declared variables. The number of cells displaying on the board can be adjusted by modifying the height and the width, this will return a different amount of squares. They were appended to the board by iterating and using `.appendChild` function.
+The coding process of actual gameplay starts by laying out the grids of the game, based on 3 declared variables. The number of cells displaying on the board can be adjusted by modifying the height and the width, this will return a different amount of squares. They were appended to the board by iterating and using **`.appendChild`** function.
 
 ```js
     const height = 10
@@ -81,7 +81,7 @@ The coding process of actual gameplay starts by laying out the grids of the game
 }
 ```
 
-I have also used functions for generating rows and columns, as well as setting IDs for each individual `<div>` element in order to set coordinates of the grid.
+I have also used functions for generating rows and columns, as well as setting IDs for each individual **`<div>`** element in order to set coordinates of the grid.
 
  ```js
  function columnAndRowGenerator(container, row){
@@ -116,7 +116,7 @@ function idSetter(boardSelector) {
     }
 }
 ```
-Once the board was getting done with and was all set, there was an obvious need to check whether ships could be placed on a specific position or not, so they would not overlap with any existing ones and to also begin and end the placement on the same row, so I created a function called `isShipPlacementValid` that takes in two parameters: `shipSize` and `currentCell`. 
+Once the board was getting done with and was all set, there was an obvious need to check whether ships could be placed on a specific position or not, so they would not overlap with any existing ones and to also begin and end the placement on the same row, so I created a function called **`isShipPlacementValid`** that takes in two parameters: **`shipSize`** and **`currentCell`**. 
 ```js
 function isShipPlacementValid(shipSize, currentCell) {
     const cellsToCheck = []
@@ -140,7 +140,7 @@ function isShipPlacementValid(shipSize, currentCell) {
 }
 ```
 
-For the AI placement purposes, I came up with a function called `randomShipGenerator` which only takes in one parameter `board`. It was designed so for future development of the game as I am planning on introducing a **FEELING LUCKY** button for the player that will randomly generate ships on his board. 
+For the AI placement purposes, I came up with a function called **`randomShipGenerator`** which only takes in one parameter **`board`**. It was designed so for future development of the game as I am planning on introducing a **FEELING LUCKY** button for the player that will randomly generate ships on his board. 
 ```js
 function randomShipGenerator(board) {
     let generatedShips = 0
@@ -223,7 +223,7 @@ function canGameStart() {
 }
 ```
 
-AI's turn is being regulated through multiple functions, such as `handleTurn` or `aiCellTargeting`. While the first one deals with cell selecting and updating the board after each turn, the `aiCellTargeting` was handling the actual Targeting and Hunting ships. 
+AI's turn is being regulated through multiple functions, such as **`handleTurn`** or **`aiCellTargeting`**. While the first one deals with cell selecting and updating the board after each turn, the **`aiCellTargeting`** was handling the actual **Targeting and Hunting** ships. 
 
 ```js
 HANDLING TURN
@@ -295,7 +295,7 @@ function aiCellTargeting() {
 
 ```
 
-Last but not least, I have created another function called `checkGameOver` that is quite self-descriptive. Its main aim was to check if the conditions for the game to be over were met and, if so, how to handle each scenario. Furthermore, this is also the function that helped me generate an ending page for the game, that is focusing on the same principle as the landing page - generating and appending a new `<div>`, with all of its classes and childs.
+Last but not least, I have created another function called **`checkGameOver`** that is quite self-descriptive. Its main aim was to check if the conditions for the game to be over were met and, if so, how to handle each scenario. Furthermore, this is also the function that helped me generate an ending page for the game, that is focusing on the same principle as the landing page - generating and appending a new **`<div>`**, with all of its classes and childs.
 
 ```js
 function checkGameOver(){
@@ -350,12 +350,12 @@ function checkGameOver(){
 
 ## 8. CHALLENGES 🏆
 
-+ I found updating the grid with player's placed ships quite challenging, tried different ways for drag&drop handling, the solution that I came up with was adding IDs and Classes for `<div>` elements matching settings made in .CSS file.
-+ Another challenge in building out this game was the check of ship placement. There was a bug where a player could place a 5 length size ship starting on A8 and it would generate all the way up to B2 for example. As previously mentioned, this was solved by storing the future cells where the ship was going to be placed in an array called **cellsToCheck** and then used `.some` function to find out whether at least one cell had a ship already placed there - avoiding overlaping - as well as `currCol !== currentCell.getAttribute('id').slice(0, 1)` that was meant to check whether if all the cells had the same letter in the ID or not (if they did, it would mean they were all on the same row) and return false if they did not.
++ I found updating the grid with player's placed ships quite challenging, tried different ways for drag&drop handling, the solution that I came up with was adding IDs and Classes for **`<div>`** elements matching settings made in .CSS file.
++ Another challenge in building out this game was the check of ship placement. There was a bug where a player could place a 5 length size ship starting on A8 and it would generate all the way up to B2 for example. As previously mentioned, this was solved by storing the future cells where the ship was going to be placed in an array called **`cellsToCheck`** and then used **`.some`** function to find out whether at least one cell had a ship already placed there - avoiding overlaping - as well as **`currCol !== currentCell.getAttribute('id').slice(0, 1)`** that was meant to check whether if all the cells had the same letter in the ID or not (if they did, it would mean they were all on the same row) and return false if they did not.
 
 ## 9. BUGS 🐛
 
-+ I did not get the chance to thoroughly inspect and test every single aspect of the game, but one bug that I am currently aware of is that `isShipPlacementValid` would not properly function on the column **J** when it comes to ship length.
++ I did not get the chance to thoroughly inspect and test every single aspect of the game, but one bug that I am currently aware of is that **`isShipPlacementValid`** would not properly function on the column **J** when it comes to ship length.
 + Sometimes, sound would not load on Safari browsers. However, works perfectly fine on Firefox and Chrome.
 
 ## 10. FUTURE IMPROVEMENTS 🏫
