@@ -31,7 +31,7 @@ The game can be played and tested [here](https://msionut28.github.io/Battleships
 
 ![My Excalidraw wireframe](/assets/wireframe.png)
 
-The first step in building out my project was to have a plan to follow. I had layed out my basic grid structure, as well as things that I had to focus on, as well as features of the game
+The first step in building out my project was to have a plan to follow. I had layed out my basic grid structure, as well as things that I had to focus on, but also features of the game
 such as: extra points for streak hits. I was initially planning on different design for showing up the hit and missed ships, however throughout developing my project I thought that
 using special characters instead of solid boxes would be more beneficial. 
 
