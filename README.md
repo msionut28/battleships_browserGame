@@ -38,7 +38,7 @@ using special characters instead of solid boxes would be more beneficial.
 ## 7. CODING 💻
 
 The top section of my code was mainly focused on declaring variables so it would be easier to read, but also to find and compare. For the landing page, I have created a `<div>` in the index.html and appended buttons with attributes specific to Bootstrap using JavaScript DOM.
-```
+```js
 for (let i = 0; i < 3; i++){
     const landingPage = document.querySelector('.landing-page')
     const button = document.createElement('button')
@@ -50,7 +50,7 @@ for (let i = 0; i < 3; i++){
 ```
 Once the start button has been pressed, the `<div>` and all of its child elements gets removed from the parent node, so the playing boards would be visible and the game could start. By doing so, there was no need for multiple HTML files to be used, therefore to project was as simple as possible.
 
-```
+```js
 function startGame(classOf) {
     let divToRemove = document.querySelector(classOf)
     
@@ -67,7 +67,7 @@ function startGame(classOf) {
 
 The coding process of actual gameplay starts by laying out the grids of the game, based on 3 declared variables. The number of cells displaying on the board can be adjusted by modifying the height and the width, this will return a different amount of squares. They were appended to the board by iterating and using `.appendChild` function.
 
-```
+```js
     const height = 10
     const width = 10
     const cellCount = width * height
@@ -83,7 +83,7 @@ The coding process of actual gameplay starts by laying out the grids of the game
 
 I have also used functions for generating rows and columns, as well as setting IDs for each individual `<div>` element in order to set coordinates of the grid.
 
- ```
+ ```js
  function columnAndRowGenerator(container, row){
     for (let i = 0; i < columnIndex.length; i++){
         const colGenerator = document.createElement('div')
@@ -117,7 +117,7 @@ function idSetter(boardSelector) {
 }
 ```
 Once the board was getting done with and was all set, there was an obvious need to check whether ships could be placed on a specific position or not, so they would not overlap with any existing ones and to also begin and end the placement on the same row, so I created a function called `isShipPlacementValid` that takes in two parameters: `shipSize` and `currentCell`. 
-```
+```js
 function isShipPlacementValid(shipSize, currentCell) {
     const cellsToCheck = []
     const currId = currentCell.getAttribute('id')
@@ -141,7 +141,7 @@ function isShipPlacementValid(shipSize, currentCell) {
 ```
 
 For the AI placement purposes, I came up with a function called `randomShipGenerator` which only takes in one parameter `board`. It was designed so for future development of the game as I am planning on introducing a **FEELING LUCKY** button for the player that will randomly generate ships on his board. 
-```
+```js
 function randomShipGenerator(board) {
     let generatedShips = 0
 
@@ -170,7 +170,7 @@ function randomShipGenerator(board) {
 
 Before the actual start of the game, I had to make sure that everything was in place, but also to accordingly update the message in the header, as well as knowing when the coin flip button should show up. 
 
-```
+```js
 function canGameStart() {
     const overCells = Array.from(playerBoard.querySelectorAll('.over'))
     
@@ -225,7 +225,7 @@ function canGameStart() {
 
 AI's turn is being regulated through multiple functions, such as `handleTurn` or `aiCellTargeting`. While the first one deals with cell selecting and updating the board after each turn, the `aiCellTargeting` was handling the actual Targeting and Hunting ships. 
 
-```
+```js
 HANDLING TURN
 function handleTurn () {
     if (checkGameOver()) { 
@@ -297,7 +297,7 @@ function aiCellTargeting() {
 
 Last but not least, I have created another function called `checkGameOver` that is quite self-descriptive. Its main aim was to check if the conditions for the game to be over were met and, if so, how to handle each scenario. Furthermore, this is also the function that helped me generate an ending page for the game, that is focusing on the same principle as the landing page - generating and appending a new `<div>`, with all of its classes and childs.
 
-```
+```js
 function checkGameOver(){
     const endingPageDiv = document.createElement('div')
     endingPageDiv.className = 'ending-page'
