@@ -53,7 +53,6 @@ function init() {
 function boardGenerator(board) {
     for (let i = 0; i < cellCount; i++) {
         const cell = document.createElement('div')
-        // cell.innerHTML = i
         //ADDING CELLS TO BOARD
         board.appendChild(cell)
     }
