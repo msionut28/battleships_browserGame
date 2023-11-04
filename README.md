@@ -16,7 +16,7 @@ who is going to start firing shots at the opponent's ship. The player will be gi
 generated, the game can start. Each player has one shot per turn, the game ends once one player gets all of his ships destroyed.
 
 ## 4. DEPLOYMENT 🕸️
-The game can be played and tested **[here](https://msionut28.github.io/Battleships-Project/)**.
+The game can be played and tested **[here](https://msionut28.github.io/battleships_browserGame/)**.
 
 ![Actual gameplay](/assets/gameplay.gif)
 
